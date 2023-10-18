@@ -65,10 +65,10 @@ export const removeCompanyAsync = createAsyncThunk<void, {companyId:number}>(
 
 )
 
-export const deleteCompany = (companyId:number)=> ({
-    type: DELETE_COMPANY,
-    paload:companyId,
-});
+// export const deleteCompany = (companyId:number)=> ({
+//     type: DELETE_COMPANY,
+//     paload:companyId,
+// });
 
 
 export const companiesSlice = createSlice({

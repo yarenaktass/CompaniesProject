@@ -24,14 +24,14 @@ namespace API.Controllers
         [HttpGet]
         public IActionResult GetEmployees()
         {
-            var employees = _employeeService.GetObjects().ToList();
+            var employees = _employeeService.GetEmployees().ToList();
             return Ok(employees);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult>GetEmployee(int id)
         {
-            var employee = await _employeeService.GetObject(id);
+            var employee = await _employeeService.GetEmployee(id);
             if(employee == null){
 
                 return NotFound();
@@ -44,7 +44,7 @@ namespace API.Controllers
         {
             if(ModelState.IsValid)
             {
-                await _employeeService.Create(employeeDto);
+                await _employeeService.CreateEmployee(employeeDto);
                 return CreatedAtAction(nameof(GetEmployee), new {id = employeeDto.Id}, employeeDto);
             }
             return BadRequest();
@@ -54,12 +54,12 @@ namespace API.Controllers
 
         public async Task<IActionResult>DeleteEmployee(int id)
         {
-            var employeeDto = await _employeeService.GetObject(id);
+            var employeeDto = await _employeeService.GetEmployee(id);
             if(employeeDto == null)
             {
                 return NotFound();
             }
-            await _employeeService.Delete(employeeDto);
+            await _employeeService.DeleteEmployee(employeeDto);
             return NoContent();
         }
 
@@ -72,7 +72,7 @@ namespace API.Controllers
             }
             try
             {
-                await _employeeService.Update(employeeDto);
+                await _employeeService.UpdateEmployee(employeeDto);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -90,7 +90,7 @@ namespace API.Controllers
 
         private async Task<bool> EmployeExist(int id)
         {
-            var employee = await _employeeService.GetObject(id);
+            var employee = await _employeeService.GetEmployee(id);
             return employee != null;
         }
     }

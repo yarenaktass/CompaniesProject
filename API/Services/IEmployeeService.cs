@@ -7,11 +7,11 @@ namespace API.Services
 {
     public interface IEmployeeService<T>
     {
-        Task<T>GetObject(int id);
-        IQueryable<T> GetObjects();
-        Task Create(T entity);
-        Task Update(T entity);
-        Task Delete(T entity);
+        Task<T>GetEmployee(int id);
+        IQueryable<T> GetEmployees();
+        Task CreateEmployee(T entity);
+        Task UpdateEmployee(T entity);
+        Task DeleteEmployee(T entity);
 
     }
 }

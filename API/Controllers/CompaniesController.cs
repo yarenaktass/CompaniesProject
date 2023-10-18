@@ -24,7 +24,7 @@ namespace API.Controllers
 
         public IActionResult GetCompanies()
         {
-            var companies = _companyService.GetObjects().ToList();
+            var companies = _companyService.GetCompanies().ToList();
             return Ok(companies);
         }
 
@@ -32,7 +32,7 @@ namespace API.Controllers
 
         public async Task<IActionResult> GetCompany(int id)
         {
-            var company = await _companyService.GetObject(id);
+            var company = await _companyService.GetCompany(id);
             if (company == null)
             {
                 return NotFound();
@@ -46,7 +46,7 @@ namespace API.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _companyService.Create(companyDto);
+                await _companyService.CreateCompany(companyDto);
                 return CreatedAtAction(nameof(GetCompany), new { id = companyDto.Id }, companyDto);
             }
             return BadRequest();
@@ -56,12 +56,12 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompany(int id)
         {
-            var companyDto = await _companyService.GetObject(id);
+            var companyDto = await _companyService.GetCompany(id);
             if (companyDto == null)
             {
                 return NotFound();
             }
-            await _companyService.Delete(companyDto); 
+            await _companyService.DeleteCompany(companyDto); 
             return NoContent();
         }
 
@@ -76,7 +76,7 @@ namespace API.Controllers
 
             try
             {
-                await _companyService.Update(companyDto);
+                await _companyService.UpdateCompany(companyDto);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -94,7 +94,7 @@ namespace API.Controllers
 
         private async Task<bool> CompanyExist(int id)
         {
-            var company = await _companyService.GetObject(id);
+            var company = await _companyService.GetCompany(id);
             return company != null;
         }
     }

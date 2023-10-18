@@ -20,29 +20,49 @@ namespace API.Services
             _mapper = mapper;
         }
 
-        public async Task<EmployeeDto> GetObject(int id)
+        public async Task<EmployeeDto> GetEmployee(int id)
         {
-            var employee = await _context.Employees.FirstOrDefaultAsync(nameof => nameof.Id == id);
+            var employee = await _context.Employees
+               .Include(e=> e.Company)
+               .FirstOrDefaultAsync(nameof => nameof.Id == id);
             var employeeDto = _mapper.Map<EmployeeDto>(employee);
             return employeeDto;
 
         }
-        public IQueryable<EmployeeDto> GetObjects()
+        public IQueryable<EmployeeDto> GetEmployees()
         {
             var employees = _context.Employees
                 .Include(e => e.Company);
-
             var employeeDtos = _mapper.ProjectTo<EmployeeDto>(employees);
 
             return employeeDtos;
         }
-        public async Task Create(EmployeeDto employeeDto)
+        // public IQueryable<EmployeeDto> GetEmployees()
+        // {
+        //     var employeeDtos = _context.Employees
+        //         .Join(_context.Companies,
+        //             e => e.CompanyId,
+        //             c => c.Id,
+        //             (employee, company) => new EmployeeDto
+        //             {
+        //                 Id = employee.Id,
+        //                 FirstName = employee.FirstName,
+        //                 LastName = employee.LastName,
+        //                 CompanyName = company.Name,
+        //                 Title = employee.Title,
+        //                 Email = employee.Email,
+        //                 PhoneNumber = employee.PhoneNumber
+        //             });
+
+        //     return employeeDtos;
+        // }
+        public async Task CreateEmployee(EmployeeDto employeeDto)
         {
             var employee = _mapper.Map<Employee>(employeeDto);
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
         }
-        public async Task Delete(EmployeeDto employeeDto)
+        public async Task DeleteEmployee(EmployeeDto employeeDto)
         {
             var employee = _mapper.Map<Employee>(employeeDto);
             var existingEmployee = await _context.Employees.FindAsync(employee.Id);
@@ -52,7 +72,7 @@ namespace API.Services
                 await _context.SaveChangesAsync();
             }
         }
-        public async Task Update(EmployeeDto employeeDto)
+        public async Task UpdateEmployee(EmployeeDto employeeDto)
         {
             var employee = _mapper.Map<Employee>(employeeDto);
             _context.Employees.Update(employee);

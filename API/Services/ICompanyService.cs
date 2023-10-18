@@ -7,10 +7,10 @@ namespace API.Services
 {
     public interface ICompanyService<T>
     {
-        Task<T>GetObject(int id);
-        IQueryable<T> GetObjects();
-        Task Create(T entity);
-        Task Update(T entity);
-        Task Delete(T entity);
+        Task<T>GetCompany(int id);
+        IQueryable<T> GetCompanies();
+        Task CreateCompany(T entity);
+        Task UpdateCompany(T entity);
+        Task DeleteCompany(T entity);
     }
 }

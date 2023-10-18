@@ -1,31 +1,41 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../app/store/ConfigureStore";
+import { useAppDispatch, useAppSelector } from "../../store/ConfigureStore";
 import {
   companySelectors,
   fetchCompaniesAsync,
   removeCompanyAsync,
-} from "../slices/companiesSlice";
+} from "../../../slices/companiesSlice";
 import {
+  AppBar,
+  Box,
   Button,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  TextField,
+  Toolbar,
+  Typography,
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SearchIcon from '@mui/icons-material/Search';
 import CreateorUpdateCompany from "./CreateorUpdateCompany";
-import EnumFormStateType from "../app/models/EnumFormState";
+import EnumFormStateType from "../../models/EnumFormState";
 import EditIcon from "@mui/icons-material/Edit";
 import * as XLSX from "xlsx";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
-import { formatDate } from "../app/models/util";
-import CompanyHeader from "./CompanyHeader";
+import { formatDate } from "../../models/util";
+import { title } from "process";
+import BackButton from "../../../constants/BackButton";
+import Menu from "../../../layout/Menu";
+import { Link } from "react-router-dom";
 
 const CompanyTable = () => {
   const [formState, setFormState] = useState<any>("");
+  const { user } = useAppSelector((state) => state.account);
   const [isOpenCreateorUpdatePopup, setIsOpenCreateorUpdatePopup] =
     useState(false);
   const dispatch = useAppDispatch();
@@ -34,6 +44,16 @@ const CompanyTable = () => {
     (state) => state.companies
   );
   const [companyId, setCompanyId] = useState<number | null>(null);
+  const [searchTermName, setSearchTermName] = useState("");
+  const [searchTermTitle, setSearchTermTitle] = useState("");  
+
+  const filteredCompanies = companies.filter((company) =>{
+    const name = company.name.toLowerCase();
+    const title = company.title.toLowerCase();
+    const searchName = searchTermName.toLowerCase();
+    const searchTitle = searchTermTitle.toLowerCase();
+    return name.includes(searchName) && title.includes(searchTitle);
+  });
 
   useEffect(() => {
     if (!companiesLoaded) dispatch(fetchCompaniesAsync());
@@ -75,7 +95,31 @@ const CompanyTable = () => {
 
   return (
     <>
-    <CompanyHeader/>
+   <div>
+   <AppBar position="static" sx={{ backgroundColor: 'lightgreen', mb:4}}>
+            <Toolbar>
+                <BackButton/>
+                <Box sx = {{flex:1, display:'flex', justifyContent: 'center'}}>
+                     <Typography variant="h4">Company List</Typography>
+                </Box>
+                {user ? (
+            <Menu />
+          ) : (
+            <Link to="/loginPage" style={{ textDecoration: "none" }}>
+              <Button
+                sx={{
+                  color: "white",
+                  backgroundColor: "lightgreen",
+                  display: "flex",
+                }}
+              >
+                Login
+              </Button>
+            </Link>
+          )}
+            </Toolbar>
+        </AppBar>
+   </div>
       <CreateorUpdateCompany
         key={formState === EnumFormStateType.UpdateForm ? "edit" : "add"}
         handlePopupClose={handleClose}
@@ -96,6 +140,56 @@ const CompanyTable = () => {
       <Button onClick={handleDownloadExcel}>
         <ArrowCircleDownIcon sx={{ color: "darkgreen", fontSize: "36px" }} />
       </Button>
+     <div>
+     <TextField
+          size="small"
+          placeholder="search by name..."
+          value={searchTermName}
+          onChange={(e) => setSearchTermName(e.target.value)}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "& fieldset" : {
+                borderColor: "darkgreen",
+                borderWidth:2,
+              },
+              "&:hover fieldset" : {
+                borderColor:"darkgreen", // Mouse ile üstüne gelindiğinde çizgi rengi
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "darkgreen",   // Odaklandığında çizgi rengi
+              },
+            },
+          }}
+          InputProps={{
+            startAdornment: <SearchIcon/>
+          }}
+      />
+     </div>
+       <div style={{marginLeft:"10px"}}>
+       <TextField
+          size="small"
+          placeholder="search by title..."
+          value={searchTermTitle}
+          onChange={(e) => setSearchTermTitle(e.target.value)}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "& fieldset" : {
+                borderColor: "darkgreen",
+                borderWidth:2,
+              },
+              "&:hover fieldset" : {
+                borderColor:"darkgreen", // Mouse ile üstüne gelindiğinde çizgi rengi
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "darkgreen",   // Odaklandığında çizgi rengi
+              },
+            },
+          }}
+          InputProps={{
+            startAdornment: <SearchIcon/>
+          }}
+      />
+       </div>
     </div>
       <Table >
         <TableHead>
@@ -125,7 +219,7 @@ const CompanyTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {companies.map((company) => (
+          {filteredCompanies.map((company) => (
             <TableRow key={company.id}>
               {/* <TableCell>{company.id.toString()}</TableCell> */}
               <TableCell>{company.name}</TableCell>

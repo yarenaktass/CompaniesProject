@@ -22,14 +22,14 @@ namespace API.Services
             _mapper = mapper;
         }
 
-        public async Task<CompanyDto> GetObject(int id)
+        public async Task<CompanyDto> GetCompany(int id)
         {
             var company = await _context.Companies.FirstOrDefaultAsync(nameof => nameof.Id == id);
             var companyDto = _mapper.Map<CompanyDto>(company);
             return companyDto;
         }
 
-        public IQueryable<CompanyDto> GetObjects()
+        public IQueryable<CompanyDto> GetCompanies()
         {
             var companies = _context.Companies;
             var companyDtos = _mapper.ProjectTo<CompanyDto>(companies);
@@ -37,14 +37,14 @@ namespace API.Services
             return companyDtos;
         }
 
-        public async Task Create(CompanyDto companyDto)
+        public async Task CreateCompany(CompanyDto companyDto)
         {
             var company = _mapper.Map<Company>(companyDto);
             _context.Companies.Add(company);
             await _context.SaveChangesAsync();
         }
 
-        public async Task Delete(CompanyDto companyDto)
+        public async Task DeleteCompany(CompanyDto companyDto)
         {
             var company = _mapper.Map<Company>(companyDto);
             var existingCompany = await _context.Companies.FindAsync(company.Id); 
@@ -56,7 +56,7 @@ namespace API.Services
         }
 
 
-        public async Task Update(CompanyDto companyDto)
+        public async Task UpdateCompany(CompanyDto companyDto)
         {
             var company = _mapper.Map<Company>(companyDto);
             _context.Companies.Update(company);

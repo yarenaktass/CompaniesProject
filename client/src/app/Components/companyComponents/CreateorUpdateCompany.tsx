@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../app/store/ConfigureStore";
+import { useAppDispatch } from "../../store/ConfigureStore";
 import * as yup from "yup";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import agent from "../context/agent";
+import agent from "../../../context/agent";
 import {
   Button,
   Checkbox,
@@ -15,14 +15,14 @@ import {
   TextField,
 } from "@mui/material";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { Company } from "../app/models/company";
+import { Company } from "../../models/company";
 import {
   addCompaniesAsync,
   fetchCompaniesAsync,
   updateCompanyAsync,
-} from "../slices/companiesSlice";
-import EnumFormStateType from "../app/models/EnumFormState";
-import { formatDate } from "../app/models/util";
+} from "../../../slices/companiesSlice";
+import EnumFormStateType from "../../models/EnumFormState";
+import { formatDate } from "../../models/util";
 
 interface CreateorUpdateCompany {
   isOpenCreateorUpdatePopup: boolean;

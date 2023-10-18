@@ -11,6 +11,11 @@ import { Link } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import BadgeIcon from '@mui/icons-material/Badge';
+import MenuIcon from '@mui/icons-material/Menu';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useAppDispatch, useAppSelector } from '../app/store/ConfigureStore';
+import { signOut } from '../slices/accountSlice';
 
 const menuLinkStyles = {
   display: 'flex',
@@ -20,12 +25,19 @@ const menuLinkStyles = {
 };
 
 const menuIconStyles = {
-  marginRight: '8px', // İkon ile metin arasındaki boşluk
+  color:'white'
+};
+const iconsStyle = {
+  marginRight: '8px',
 };
 
 export default function Menu() {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
+  const dispatch = useAppDispatch();
+  const {user} = useAppSelector((state) => state.account);
+  const prevOpen = React.useRef(open);
+
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -51,7 +63,6 @@ export default function Menu() {
     }
   }
 
-  const prevOpen = React.useRef(open);
   useEffect(() => {
     if (prevOpen.current === true && open === false) {
       anchorRef.current!.focus();
@@ -60,9 +71,11 @@ export default function Menu() {
     prevOpen.current = open;
   }, [open]);
 
+ 
+// style={{ zIndex: 1000 }} menü bileşenini diğer bileşenlerin üzerine getirecektir.
   return (
-    <Stack direction="row" spacing={2}>
-      <div>
+    <Stack direction="row" spacing={2} >
+      <div style={{ zIndex: 1000 }}> 
         <Button
           ref={anchorRef}
           id="composition-button"
@@ -71,7 +84,7 @@ export default function Menu() {
           aria-haspopup="true"
           onClick={handleToggle}
         >
-          MENU
+          <MenuIcon style={menuIconStyles} />
         </Button>
         <Popper
           open={open}
@@ -97,22 +110,40 @@ export default function Menu() {
                     aria-labelledby="composition-button"
                     onKeyDown={handleListKeyDown}
                   >
+                     {/* <MenuItem onClick={handleClose}>
+                      <Link to="/loginPage" style={menuLinkStyles}>
+                        <LockOpenIcon sx={iconsStyle} />
+                        Sing-in
+                      </Link>
+                    </MenuItem> */}
                     <MenuItem onClick={handleClose}>
                       <Link to="/" style={menuLinkStyles}>
-                        <HomeIcon sx={menuIconStyles} />
+                        <HomeIcon sx={iconsStyle} />
                         Home
                       </Link>
                     </MenuItem>
                     <MenuItem onClick={handleClose}>
                       <Link to="/companyTable" style={menuLinkStyles}>
-                        <ApartmentIcon sx={menuIconStyles} />
+                        <ApartmentIcon sx={iconsStyle} />
                         Company List
                       </Link>
                     </MenuItem>
                     <MenuItem onClick={handleClose}>
                       <Link to="/employeeTable" style={menuLinkStyles}>
-                        <BadgeIcon sx={menuIconStyles} />
+                        <BadgeIcon sx={iconsStyle} />
                         Employee List
+                      </Link>
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <Link to="/workTable" style={menuLinkStyles}>
+                        <AssignmentIcon sx={iconsStyle} />
+                        Work List
+                      </Link>
+                    </MenuItem>
+                    <MenuItem onClick={() => dispatch(signOut)}>
+                      <Link to="/loginPage" style={menuLinkStyles}>
+                        <LogoutIcon sx={iconsStyle} />
+                        Logout
                       </Link>
                     </MenuItem>
                   </MenuList>

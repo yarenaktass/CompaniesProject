@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../app/store/ConfigureStore";
+import { useAppDispatch } from "../../store/ConfigureStore";
 import * as yup from "yup";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import agent from "../context/agent";
+import agent from "../../../context/agent";
 import {
   Button,
   Checkbox,
@@ -15,9 +15,9 @@ import {
   TextField,
 } from "@mui/material";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { Employee } from "../app/models/employee";
-import { addEmployeesAsync, fetchEmployeesAsync, updateEmployeeAsync } from "../slices/employeesSlice";
-import EnumFormStateType from "../app/models/EnumFormState";
+import { Employee } from "../../models/employee";
+import { addEmployeesAsync, fetchEmployeesAsync, updateEmployeeAsync } from "../../../slices/employeesSlice";
+import EnumFormStateType from "../../models/EnumFormState";
 
 interface CreateorUpdateEmployee {
     isEmployeeCreateorUpdatePopup: boolean;
@@ -101,7 +101,7 @@ export default function CreateorUpdateEmployee({isEmployeeCreateorUpdatePopup,ha
             fontStyle: "italic",
             display: "flex",
             justifyContent: "center",
-            backgroundColor: "lightgreen",
+            backgroundColor: "lightblue",
             color: "white",
           }}
         >
@@ -138,9 +138,10 @@ export default function CreateorUpdateEmployee({isEmployeeCreateorUpdatePopup,ha
                     size="small"
                     fullWidth
                   />
-                  <div style={{ color: "red" }}>
-                    <ErrorMessage name="title" component="div" />
-                  </div>
+                     <div style={{ color: "red" }}>
+                    <ErrorMessage name="lastName" component="div" />
+                  </div>{" "}
+            
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Field
@@ -151,6 +152,9 @@ export default function CreateorUpdateEmployee({isEmployeeCreateorUpdatePopup,ha
                     size="small"
                     fullWidth
                   />
+                        <div style={{ color: "red" }}>
+                    <ErrorMessage name="title" component="div" />
+                  </div>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Field
@@ -199,7 +203,7 @@ export default function CreateorUpdateEmployee({isEmployeeCreateorUpdatePopup,ha
                   variant="contained"
                   sx={{
                     color: "white",
-                    backgroundColor: "lightgreen",
+                    backgroundColor: "lightblue",
                     display: "flex",
                   }}
                 >
@@ -208,7 +212,7 @@ export default function CreateorUpdateEmployee({isEmployeeCreateorUpdatePopup,ha
                 <Button
                   sx={{
                     color: "white",
-                    backgroundColor: "lightgreen",
+                    backgroundColor: "lightblue",
                     display: "flex",
                   }}
                   onClick={(event) => handlePopupClose(event)}
