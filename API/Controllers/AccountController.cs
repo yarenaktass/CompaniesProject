@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Data.Common;
 using API.Dtos;
 using API.Entities;
 using API.Services;
@@ -43,9 +40,17 @@ namespace API.Controllers
 
                 return userDto;
             }
-            catch (Exception)
+            catch (ArgumentNullException ex)
             {
-                return StatusCode(500, "Bir hata oluştu, lütfen daha sonra tekrar deneyin.");
+                return BadRequest($"Missing parameter: {ex.ParamName}");   //bir metodun gereken bir parametresi null ise ve null olmamalıysa bu exception fırlatılır.
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest($"Invalid operation: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
 
@@ -72,9 +77,17 @@ namespace API.Controllers
 
                 return StatusCode(201);
             }
-            catch (Exception)
+            catch (ArgumentNullException ex)
             {
-                return StatusCode(500, "Bir hata oluştu, lütfen daha sonra tekrar deneyin.");
+                return BadRequest($"Missing parameter: {ex.ParamName}");
+            }
+            catch (DbException ex)
+            {
+                return StatusCode(500, $"Database error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
 

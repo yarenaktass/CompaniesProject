@@ -10,9 +10,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AppBar, Paper, Toolbar } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import BackButton from '../../../constants/BackButton';
-import Menu from "../../../layout/Menu";
 import { FieldValues, useForm } from 'react-hook-form';
-import { useAppDispatch } from '../../store/ConfigureStore';
+import { useAppDispatch, useAppSelector } from '../../store/ConfigureStore';
 import { signInUser } from '../../../slices/accountSlice';
 import { toast } from 'react-toastify';
 
@@ -21,16 +20,21 @@ const defaultTheme = createTheme();
 
 export default function Login() {
   const navigate = useNavigate();
+  const {user} = useAppSelector((state) => state.account)
   const dispatch = useAppDispatch();
-    const {register, handleSubmit, formState:{isSubmitting, errors,isValid}} = useForm({
+    const {register, handleSubmit, formState:{errors,isValid}} = useForm({
       mode:'onTouched'
     })
 
      async function submitForm(data: FieldValues){
       debugger;
        await dispatch(signInUser(data));
-       toast.error("Unautorize");
-       navigate('/');
+       console.log(user);
+       {user ?  
+         (navigate('/'))
+         :(
+          toast.error("Unauthorize")
+       )}
       debugger;
     }
 

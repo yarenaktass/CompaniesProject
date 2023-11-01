@@ -11,9 +11,10 @@ import {
 } from "@mui/material";
 import Menu from "./Menu";
 import { Link } from "react-router-dom";
-import { CSSProperties } from "react";
+import { CSSProperties, useEffect } from "react";
 import BackButton from "../constants/BackButton";
-import { useAppSelector } from "../app/store/ConfigureStore";
+import { RootState, useAppSelector } from "../app/store/ConfigureStore";
+import { useSelector } from "react-redux";
 
 const companyTableImage = process.env.PUBLIC_URL + "/projectImg/companytable.png";
 const employeeTableImage = process.env.PUBLIC_URL + "/projectImg/employeetable.png";
@@ -21,6 +22,7 @@ const workTableImg = process.env.PUBLIC_URL + "/projectImg/worktable.png";
 
 export default function Home() {
   const { user } = useAppSelector((state) => state.account);
+  const isLoggedIn = useSelector((state: RootState) => state.account.user !== null);
   const homeStyles: { [key: string]: CSSProperties } = {
     container: {
       textAlign: "center",
@@ -41,6 +43,7 @@ export default function Home() {
       backgroundColor: "pink",
     },
   };
+
   return (
     <div style={homeStyles.container}>
       <AppBar position="static" sx={homeStyles.appBar}>
@@ -74,33 +77,7 @@ export default function Home() {
           <Typography variant="body1" color="text.secondary" gutterBottom>
           You can review companies, their employees and employees' tasks, manage tables by editing and adding entries.
           </Typography>
-          <div style={homeStyles.ctaButtons}>
-            <Link to="/companyTable" style={{ textDecoration: "none" }}>
-              <Button
-                variant="contained"
-                style={{ margin: "0 10px" , backgroundColor: "pink" }}
-              >
-                View Companies
-              </Button>
-            </Link>
-            <Link to="/employeeTable" style={{ textDecoration: "none" }}>
-              <Button
-                variant="contained"
-                style={{ margin: "0 10px", backgroundColor: "pink"  }}
-              >
-                Viev Employees
-              </Button>
-            </Link>
-          </div>
-          <Link to ="/workTable" style={{textDecoration: "none"}}>
-            <Button
-            variant="contained"
-            style={{ marginTop:"10px" , backgroundColor: "pink" }}  
-            >
-              View Works
-            </Button>
-          </Link>
-
+       
           <div style={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
             <div style={homeStyles.howToUse}>
               <Typography variant="h5" gutterBottom>

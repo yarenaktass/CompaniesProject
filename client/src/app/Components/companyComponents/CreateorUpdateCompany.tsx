@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../store/ConfigureStore";
+import { RootState, useAppDispatch, useAppSelector } from "../../store/ConfigureStore";
 import * as yup from "yup";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import agent from "../../../context/agent";
 import {
@@ -23,6 +22,7 @@ import {
 } from "../../../slices/companiesSlice";
 import EnumFormStateType from "../../models/EnumFormState";
 import { formatDate } from "../../models/util";
+import { useSelector } from "react-redux";
 
 interface CreateorUpdateCompany {
   isOpenCreateorUpdatePopup: boolean;
@@ -46,6 +46,7 @@ export default function CreateorUpdateCompany({
   id,
 }: CreateorUpdateCompany) {
   const dispatch = useAppDispatch();
+  const {user} = useAppSelector(state => state.account)
 
   const isUpdate = () => {
     return formState == EnumFormStateType.UpdateForm;
@@ -72,6 +73,7 @@ export default function CreateorUpdateCompany({
           isActive: false,
         }
   );
+ 
 
   useEffect(() => {
     getCompanyById();
@@ -216,7 +218,7 @@ export default function CreateorUpdateCompany({
                     backgroundColor: "lightgreen",
                     display: "flex",
                   }}
-                >
+                  >
                   {id ? "Edit" : "Add"}
                 </Button>
                 <Button

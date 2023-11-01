@@ -135,7 +135,7 @@ export default function Register() {
             </Button>
             <Grid container>
               <Grid item>
-                <Link to="/login">{"Don't have an account? Sign Up"}</Link>
+                <Link to="/loginPage">{"Don't have an account? Sign Up"}</Link>
               </Grid>
             </Grid>
           </Box>

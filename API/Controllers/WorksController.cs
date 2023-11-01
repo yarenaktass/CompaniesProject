@@ -13,9 +13,9 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class WorksController : ControllerBase
     {
-        private readonly IWorkService<WorkDto> _workService;
+        private readonly IWorkService _workService;
 
-        public WorksController(IWorkService<WorkDto> workService)
+        public WorksController(IWorkService workService)
         {
             _workService = workService;
         }
@@ -59,7 +59,7 @@ namespace API.Controllers
             {
                 return NotFound();
             }
-            await _workService.DeleteWork(workDto);
+            await _workService.DeleteWork(id);
             return NoContent();
         }
 

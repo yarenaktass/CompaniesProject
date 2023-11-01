@@ -3,17 +3,21 @@ import { Company } from "../app/models/company";
 import { Employee } from "../app/models/employee";
 import { Work } from "../app/models/Work";
 import { store } from "../app/store/ConfigureStore";
+import { toast } from "react-toastify";
 
 axios.defaults.baseURL = 'http://localhost:5000/api/';
 axios.defaults.withCredentials=true;
 const responseBody = (response:AxiosResponse) =>response.data;
 
-
 axios.interceptors.request.use(config => {
-   const token = store.getState().account.user?.token;
-   if(token) config.headers.Authorization = `Bearer ${token}`;
-   return config;
-}) 
+    const token = store.getState().account.user?.token;
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    console.log(config.headers); 
+    return config;
+});
+
 axios.interceptors.response.use(async response => {
     return response;
   },(error: AxiosError) => {
@@ -29,6 +33,12 @@ axios.interceptors.response.use(async response => {
              }
              throw modelStateErrors.flat();
           }
+          toast.error(data.title);
+          break;
+          case 403:
+            toast.error('You are not allowed to do that!');
+          break;
+
 
      }
     return Promise.reject(error.response);

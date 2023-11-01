@@ -2,16 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Dtos;
 
 namespace API.Services
 {
-    public interface IWorkService<T>
+    public interface IWorkService
     {
-        Task<T> GetWork(int id);
-        IQueryable<T> GetWorks();
-        Task CreateWork(T entity);
-        Task UpdateWork(T entity);
-        Task DeleteWork(T entity);
+        Task<WorkDto> GetWork(int id);
+        IQueryable<WorkDto> GetWorks();
+        Task CreateWork(WorkDto workDto);
+        Task UpdateWork(WorkDto workDto);
+        Task DeleteWork(int id);
 
     }
 }

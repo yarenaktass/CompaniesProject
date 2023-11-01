@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+using API.Entities;
 
-namespace API.Entities
+namespace API.Repositories
 {
-    public class User : IdentityUser<int>
+    public interface IWorkRepository : IBaseRepository<Work>
     {
         
     }

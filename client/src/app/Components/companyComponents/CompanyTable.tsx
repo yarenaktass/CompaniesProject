@@ -21,7 +21,7 @@ import {
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import DeleteIcon from "@mui/icons-material/Delete";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 import CreateorUpdateCompany from "./CreateorUpdateCompany";
 import EnumFormStateType from "../../models/EnumFormState";
 import EditIcon from "@mui/icons-material/Edit";
@@ -32,6 +32,7 @@ import { title } from "process";
 import BackButton from "../../../constants/BackButton";
 import Menu from "../../../layout/Menu";
 import { Link } from "react-router-dom";
+import Loading from "../Loading";
 
 const CompanyTable = () => {
   const [formState, setFormState] = useState<any>("");
@@ -45,9 +46,9 @@ const CompanyTable = () => {
   );
   const [companyId, setCompanyId] = useState<number | null>(null);
   const [searchTermName, setSearchTermName] = useState("");
-  const [searchTermTitle, setSearchTermTitle] = useState("");  
+  const [searchTermTitle, setSearchTermTitle] = useState("");
 
-  const filteredCompanies = companies.filter((company) =>{
+  const filteredCompanies = companies.filter((company) => {
     const name = company.name.toLowerCase();
     const title = company.title.toLowerCase();
     const searchName = searchTermName.toLowerCase();
@@ -60,7 +61,7 @@ const CompanyTable = () => {
   }, [companiesLoaded, dispatch]);
 
   if (status === "pendingFetchCompanies") {
-    return <div>Loading...</div>;
+    return <Loading message="Loading products..." />;
   }
 
   const handleCreateorUpdateCompany = (props: any, formStateType: number) => {
@@ -95,31 +96,31 @@ const CompanyTable = () => {
 
   return (
     <>
-   <div>
-   <AppBar position="static" sx={{ backgroundColor: 'lightgreen', mb:4}}>
-            <Toolbar>
-                <BackButton/>
-                <Box sx = {{flex:1, display:'flex', justifyContent: 'center'}}>
-                     <Typography variant="h4">Company List</Typography>
-                </Box>
-                {user ? (
-            <Menu />
-          ) : (
-            <Link to="/loginPage" style={{ textDecoration: "none" }}>
-              <Button
-                sx={{
-                  color: "white",
-                  backgroundColor: "lightgreen",
-                  display: "flex",
-                }}
-              >
-                Login
-              </Button>
-            </Link>
-          )}
-            </Toolbar>
+      <div>
+        <AppBar position="static" sx={{ backgroundColor: "lightgreen", mb: 4 }}>
+          <Toolbar>
+            <BackButton />
+            <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
+              <Typography variant="h4">Company List</Typography>
+            </Box>
+            {user ? (
+              <Menu />
+            ) : (
+              <Link to="/loginPage" style={{ textDecoration: "none" }}>
+                <Button
+                  sx={{
+                    color: "white",
+                    backgroundColor: "lightgreen",
+                    display: "flex",
+                  }}
+                >
+                  Login
+                </Button>
+              </Link>
+            )}
+          </Toolbar>
         </AppBar>
-   </div>
+      </div>
       <CreateorUpdateCompany
         key={formState === EnumFormStateType.UpdateForm ? "edit" : "add"}
         handlePopupClose={handleClose}
@@ -127,93 +128,107 @@ const CompanyTable = () => {
         formState={formState}
         id={companyId}
       />
-    <div style={{display:"flex", alignItems:'center'}}>
-    <Button
-        variant="contained"
-        sx={{ color: "white", backgroundColor: "darkGreen", display: "flex" }}
-        onClick={() =>
-          handleCreateorUpdateCompany(null, EnumFormStateType.CreateForm)
-        }
-      >
-        Add Company
-      </Button>
-      <Button onClick={handleDownloadExcel}>
-        <ArrowCircleDownIcon sx={{ color: "darkgreen", fontSize: "36px" }} />
-      </Button>
-     <div>
-     <TextField
-          size="small"
-          placeholder="search by name..."
-          value={searchTermName}
-          onChange={(e) => setSearchTermName(e.target.value)}
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              "& fieldset" : {
-                borderColor: "darkgreen",
-                borderWidth:2,
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Button
+          variant="contained"
+          sx={{ color: "white", backgroundColor: "darkGreen", display: "flex" }}
+          onClick={() =>
+            handleCreateorUpdateCompany(null, EnumFormStateType.CreateForm)
+          }
+        >
+          Add Company
+        </Button>
+        <Button onClick={handleDownloadExcel}>
+          <ArrowCircleDownIcon sx={{ color: "darkgreen", fontSize: "36px" }} />
+        </Button>
+        <div>
+          <TextField
+            size="small"
+            placeholder="search by name..."
+            value={searchTermName}
+            onChange={(e) => setSearchTermName(e.target.value)}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "darkgreen",
+                  borderWidth: 2,
+                },
+                "&:hover fieldset": {
+                  borderColor: "darkgreen", // Mouse ile üstüne gelindiğinde çizgi rengi
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "darkgreen", // Odaklandığında çizgi rengi
+                },
               },
-              "&:hover fieldset" : {
-                borderColor:"darkgreen", // Mouse ile üstüne gelindiğinde çizgi rengi
+            }}
+            InputProps={{
+              startAdornment: <SearchIcon />,
+            }}
+          />
+        </div>
+        <div style={{ marginLeft: "10px" }}>
+          <TextField
+            size="small"
+            placeholder="search by title..."
+            value={searchTermTitle}
+            onChange={(e) => setSearchTermTitle(e.target.value)}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "darkgreen",
+                  borderWidth: 2,
+                },
+                "&:hover fieldset": {
+                  borderColor: "darkgreen", // Mouse ile üstüne gelindiğinde çizgi rengi
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "darkgreen", // Odaklandığında çizgi rengi
+                },
               },
-              "&.Mui-focused fieldset": {
-                borderColor: "darkgreen",   // Odaklandığında çizgi rengi
-              },
-            },
-          }}
-          InputProps={{
-            startAdornment: <SearchIcon/>
-          }}
-      />
-     </div>
-       <div style={{marginLeft:"10px"}}>
-       <TextField
-          size="small"
-          placeholder="search by title..."
-          value={searchTermTitle}
-          onChange={(e) => setSearchTermTitle(e.target.value)}
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              "& fieldset" : {
-                borderColor: "darkgreen",
-                borderWidth:2,
-              },
-              "&:hover fieldset" : {
-                borderColor:"darkgreen", // Mouse ile üstüne gelindiğinde çizgi rengi
-              },
-              "&.Mui-focused fieldset": {
-                borderColor: "darkgreen",   // Odaklandığında çizgi rengi
-              },
-            },
-          }}
-          InputProps={{
-            startAdornment: <SearchIcon/>
-          }}
-      />
-       </div>
-    </div>
-      <Table >
+            }}
+            InputProps={{
+              startAdornment: <SearchIcon />,
+            }}
+          />
+        </div>
+      </div>
+      <Table>
         <TableHead>
           <TableRow>
             {/* <TableCell style={{ fontWeight: 'bold', color: 'green' }}>ID</TableCell> */}
-            <TableCell style={{ fontWeight: "bold", color: "green" , width:"50px" }}>
+            <TableCell
+              style={{ fontWeight: "bold", color: "green", width: "50px" }}
+            >
               NAME
             </TableCell>
-            <TableCell style={{ fontWeight: "bold", color: "green" , width:"150px" }}>
+            <TableCell
+              style={{ fontWeight: "bold", color: "green", width: "150px" }}
+            >
               TİTLE
             </TableCell>
-            <TableCell style={{ fontWeight: "bold", color: "green", width:"500px" }}>
+            <TableCell
+              style={{ fontWeight: "bold", color: "green", width: "500px" }}
+            >
               ADDRESS
             </TableCell>
-            <TableCell style={{ fontWeight: "bold", color: "green", width:"40px" }}>
+            <TableCell
+              style={{ fontWeight: "bold", color: "green", width: "40px" }}
+            >
               ACTİVE
             </TableCell>
-            <TableCell style={{ fontWeight: "bold", color: "green", width:"40px" }}>
+            <TableCell
+              style={{ fontWeight: "bold", color: "green", width: "40px" }}
+            >
               TAX NUMBER
             </TableCell>
-            <TableCell style={{ fontWeight: "bold", color: "green" , width:"40px" }}>
+            <TableCell
+              style={{ fontWeight: "bold", color: "green", width: "40px" }}
+            >
               CREATE DATE
             </TableCell>
-            <TableCell style={{ fontWeight: "bold", color: "green", width:"40px"  }}>
+            <TableCell
+              style={{ fontWeight: "bold", color: "green", width: "40px" }}
+            >
               UPDATE DATE
             </TableCell>
           </TableRow>
@@ -233,12 +248,8 @@ const CompanyTable = () => {
                 )}
               </TableCell>
               <TableCell>{company.taxNumber}</TableCell>
-              <TableCell>
-                  {formatDate(company.createDate)}
-              </TableCell>
-              <TableCell>
-                   {formatDate(company.createDate)}
-              </TableCell>
+              <TableCell>{formatDate(company.createDate)}</TableCell>
+              <TableCell>{formatDate(company.createDate)}</TableCell>
 
               <TableCell>
                 <Button
@@ -251,15 +262,21 @@ const CompanyTable = () => {
                 >
                   <EditIcon sx={{ color: "darkGreen" }} />
                 </Button>
-                <Button
-                  onClick={() =>
-                    dispatch(
-                      removeCompanyAsync({ companyId: company.id.toString() })
-                    )
-                  }
-                >
-                  <DeleteIcon sx={{ color: "red" }} />
-                </Button>
+                {user && user.roles?.includes("Admin") ? (
+                  <Button
+                    onClick={() =>
+                      dispatch(
+                        removeCompanyAsync({ companyId: company.id.toString() })
+                      )
+                    }
+                  >
+                    <DeleteIcon sx={{ color: "red" }} />
+                  </Button>
+                ) : (
+                  <Button disabled>
+                    <DeleteIcon sx={{ color: "gray" }} />
+                  </Button>
+                )}
               </TableCell>
             </TableRow>
           ))}

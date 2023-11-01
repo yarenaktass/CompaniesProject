@@ -5,24 +5,25 @@ using System.Threading.Tasks;
 using API.Data;
 using API.Dtos;
 using API.Entities;
+using API.Repositories;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
 {
-    public class WorkService : IWorkService<WorkDto>
+    public class WorkService : IWorkService
     {
-        private readonly StoreContext _context;
+        private readonly IWorkRepository _workRepository;
         private readonly IMapper _mapper;
-        public WorkService(StoreContext context, IMapper mapper)
+        public WorkService(IWorkRepository workRepository, IMapper mapper)
         {
-            _context = context;
+            _workRepository = workRepository;
             _mapper = mapper;
         }
 
         public async Task<WorkDto> GetWork(int id)
         {
-            var work = await _context.Works
+            var work = await _workRepository.GetAll()
                 .Include(w => w.Company)
                 .Include(w => w.Employee) 
                 .FirstOrDefaultAsync(w => w.Id == id);
@@ -33,7 +34,7 @@ namespace API.Services
 
         public IQueryable<WorkDto> GetWorks()
         {
-            var works = _context.Works
+            var works = _workRepository.GetAll()
                .Include(w => w.Company)
                .Include(w => w.Employee);
             var workDtos = _mapper.ProjectTo<WorkDto>(works);
@@ -43,25 +44,18 @@ namespace API.Services
         public async Task CreateWork(WorkDto workDto)
         {
             var work = _mapper.Map<Work>(workDto);
-            _context.Works.Add(work);
-            await _context.SaveChangesAsync();
+            await _workRepository.CreateAsync(work);
         }
-        public async Task DeleteWork(WorkDto workDto)
+
+         public async Task DeleteWork(int id)
         {
-            var work = _mapper.Map<Work>(workDto);
-            var existingWork = await _context.Works.FindAsync(work.Id);
-            if (existingWork != null)
-            {
-                _context.Works.Remove(existingWork);
-                await _context.SaveChangesAsync();
-            }
+            await _workRepository.DeleteAsync(id);
         }
 
         public async Task UpdateWork(WorkDto workDto)
         {
             var work = _mapper.Map<Work>(workDto);
-            _context.Works.Update(work);
-            await _context.SaveChangesAsync();
+            await _workRepository.UpdateAsync(work);
         }
     }
 }

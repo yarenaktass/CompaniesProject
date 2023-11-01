@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Dtos;
-using API.Entities;
 using API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,14 +13,15 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class EmployeesController : ControllerBase
     {
-        private readonly IEmployeeService<EmployeeDto> _employeeService;
+        private readonly IEmployeeService _employeeService;
 
-        public EmployeesController(IEmployeeService<EmployeeDto> employeeService)
+        public EmployeesController(IEmployeeService employeeService)
         {
             _employeeService = employeeService;
         }
 
         [HttpGet]
+
         public IActionResult GetEmployees()
         {
             var employees = _employeeService.GetEmployees().ToList();
@@ -29,10 +29,11 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult>GetEmployee(int id)
+        public async Task<IActionResult> GetEmployee(int id)
         {
             var employee = await _employeeService.GetEmployee(id);
-            if(employee == null){
+            if (employee == null)
+            {
 
                 return NotFound();
             }
@@ -40,43 +41,43 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult>AddEmployee(EmployeeDto employeeDto)
+        public async Task<IActionResult> AddEmployee(EmployeeDto employeeDto)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                await _employeeService.CreateEmployee(employeeDto);
-                return CreatedAtAction(nameof(GetEmployee), new {id = employeeDto.Id}, employeeDto);
+                await _employeeService.CreateEmployeeAsync(employeeDto);
+                return CreatedAtAction(nameof(GetEmployee), new { id = employeeDto.Id }, employeeDto);
             }
             return BadRequest();
         }
 
         [HttpDelete("{id}")]
 
-        public async Task<IActionResult>DeleteEmployee(int id)
+        public async Task<IActionResult> DeleteEmployee(int id)
         {
             var employeeDto = await _employeeService.GetEmployee(id);
-            if(employeeDto == null)
+            if (employeeDto == null)
             {
                 return NotFound();
             }
-            await _employeeService.DeleteEmployee(employeeDto);
+            await _employeeService.DeleteEmployeeAsync(id);
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult>UpdateEmployee(int id, EmployeeDto employeeDto)
+        public async Task<IActionResult> UpdateEmployee(int id, EmployeeDto employeeDto)
         {
-            if(id != employeeDto.Id)
+            if (id != employeeDto.Id)
             {
                 return BadRequest();
             }
             try
             {
-                await _employeeService.UpdateEmployee(employeeDto);
+                await _employeeService.UpdateEmployeeAsync(employeeDto);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if(!await EmployeExist(id))
+                if (!await EmployeExist(id))
                 {
                     return NotFound();
                 }

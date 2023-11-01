@@ -28,6 +28,7 @@ import CreateorUpdateEmployee from "./CreateorUpdateEmployee";
 import BackButton from "../../../constants/BackButton";
 import Menu from "../../../layout/Menu";
 import { Link } from "react-router-dom";
+import Loading from "../Loading";
 
 const EmployeeTable = () => {
   const dispatch = useAppDispatch();
@@ -54,6 +55,11 @@ const EmployeeTable = () => {
   useEffect(() => {
     if (!employeesLoaded) dispatch(fetchEmployeesAsync());
   }, [employeesLoaded, dispatch]);
+
+
+  if (status === "pendingFetchEmployees") {
+    return  <Loading message='Loading products...' />
+  }
 
   const handleCreateorUpdateEmployee = (props: any, formStateType: number) => {
     setFormState(formStateType);

@@ -16,6 +16,7 @@ import CreateorUpdateWork from "./CreateorUpdateWork";
 import Menu from "../../../layout/Menu";
 import BackButton from "../../../constants/BackButton";
 import { Link } from "react-router-dom";
+import Loading from "../Loading";
 
 const WorkTable = () => {
     const [formState, setFormState] = useState<any>("");
@@ -41,7 +42,7 @@ const WorkTable = () => {
     }, [worksLoaded, dispatch]);
   
     if (status === "pendingFetchWorks") {
-      return <div>Loading...</div>;
+      return <Loading message='Loading products...' />
     }
   
     const handleCreateorUpdateWork = (props: any, formStateType: number) => {

@@ -5,63 +5,52 @@ using System.Threading.Tasks;
 using API.Data;
 using API.Dtos;
 using API.Entities;
-using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using API.Repositories;
 
 
 namespace API.Services
 {
-    public class CompanyService : ICompanyService<CompanyDto>
+    public class CompanyService : ICompanyService
     {
-        private readonly StoreContext _context;
+        private readonly ICompanyRepository _companyRepository;
         private readonly IMapper _mapper;
 
-        public CompanyService(StoreContext context, IMapper mapper)
+        public CompanyService(ICompanyRepository companyRepository, IMapper mapper)
         {
-            _context = context;
+            _companyRepository = companyRepository;
             _mapper = mapper;
         }
 
         public async Task<CompanyDto> GetCompany(int id)
         {
-            var company = await _context.Companies.FirstOrDefaultAsync(nameof => nameof.Id == id);
-            var companyDto = _mapper.Map<CompanyDto>(company);
-            return companyDto;
+            var companyEntity = await _companyRepository.GetAsync(id);
+            return _mapper.Map<CompanyDto>(companyEntity);
         }
 
         public IQueryable<CompanyDto> GetCompanies()
         {
-            var companies = _context.Companies;
-            var companyDtos = _mapper.ProjectTo<CompanyDto>(companies);
-
-            return companyDtos;
+            var companyEntities = _companyRepository.GetAll();
+            return _mapper.ProjectTo<CompanyDto>(companyEntities);
         }
 
         public async Task CreateCompany(CompanyDto companyDto)
         {
-            var company = _mapper.Map<Company>(companyDto);
-            _context.Companies.Add(company);
-            await _context.SaveChangesAsync();
+            var companyEntity = _mapper.Map<Company>(companyDto);
+            await _companyRepository.CreateAsync(companyEntity);
         }
-
-        public async Task DeleteCompany(CompanyDto companyDto)
-        {
-            var company = _mapper.Map<Company>(companyDto);
-            var existingCompany = await _context.Companies.FindAsync(company.Id); 
-            if (existingCompany != null)
-            {
-                _context.Companies.Remove(existingCompany);
-                await _context.SaveChangesAsync();
-            }
-        }
-
 
         public async Task UpdateCompany(CompanyDto companyDto)
         {
-            var company = _mapper.Map<Company>(companyDto);
-            _context.Companies.Update(company);
-            await _context.SaveChangesAsync();
+            var companyEntity = _mapper.Map<Company>(companyDto);
+            await _companyRepository.UpdateAsync(companyEntity);
         }
+
+        public async Task DeleteCompany(int id)
+        {
+            await _companyRepository.DeleteAsync(id);
+        }
+
 
     }
 }

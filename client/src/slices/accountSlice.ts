@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { User } from "../app/models/user";
 import { FieldValues } from "react-hook-form";
 import agent from "../context/agent";
-import { Router } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface AccountState{
     user:User | null;
@@ -38,6 +38,7 @@ export const fetchCurrentUser = createAsyncThunk<User>(
         }
     }
 )
+
 export const accountSlice = createSlice({
     name:'account',
     initialState,
@@ -45,16 +46,27 @@ export const accountSlice = createSlice({
         signOut: (state) => {
             state.user = null;
             localStorage.removeItem('user');
+        },
+        setUser: (state,action) => {
+            const claims = JSON.parse(atob(action.payload.token.split('.')[1]));
+            const roles = claims['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+            state.user = {...action.payload, roles: typeof(roles) === 'string' ? [roles] : roles}
         }
     },
     extraReducers:(builder => {
         builder.addMatcher(isAnyOf(signInUser.fulfilled, fetchCurrentUser.fulfilled),(state,action)=>{
-            state.user = action.payload;
+            const claims = JSON.parse(atob(action.payload.token.split('.')[1]));
+            const roles = claims['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+            state.user = {...action.payload, roles: typeof(roles) === 'string' ? [roles] : roles}
         });
         builder.addMatcher(isAnyOf(signInUser.rejected, fetchCurrentUser.rejected), (state,action) => {
-            console.log(action.payload);
+            state.user = null;
+            localStorage.removeItem('user');
+            toast.error('Session expired - please login again');
+        });
+        builder.addMatcher(isAnyOf(signInUser.pending, fetchCurrentUser.pending), (state) => {
         });
     })
 })
 
-export const {signOut} = accountSlice.actions;
+export const {signOut, setUser} = accountSlice.actions;

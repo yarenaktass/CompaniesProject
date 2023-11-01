@@ -2,15 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Dtos;
 
 namespace API.Services
 {
-    public interface ICompanyService<T>
+    public interface ICompanyService
     {
-        Task<T>GetCompany(int id);
-        IQueryable<T> GetCompanies();
-        Task CreateCompany(T entity);
-        Task UpdateCompany(T entity);
-        Task DeleteCompany(T entity);
+        Task<CompanyDto> GetCompany(int id);
+        IQueryable<CompanyDto> GetCompanies();
+        Task CreateCompany(CompanyDto companyDto);
+        Task UpdateCompany(CompanyDto companyDto);
+        Task DeleteCompany(int id);
     }
 }

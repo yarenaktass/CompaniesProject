@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Dtos;
 using API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,15 +14,14 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class CompaniesController : ControllerBase
     {
-        private readonly ICompanyService<CompanyDto> _companyService;
+        private readonly ICompanyService _companyService;
 
-        public CompaniesController(ICompanyService<CompanyDto> companyService)
+        public CompaniesController(ICompanyService companyService)
         {
             _companyService = companyService;
         }
 
         [HttpGet]
-
         public IActionResult GetCompanies()
         {
             var companies = _companyService.GetCompanies().ToList();
@@ -52,7 +52,7 @@ namespace API.Controllers
             return BadRequest();
         }
 
-
+       [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompany(int id)
         {
@@ -61,12 +61,12 @@ namespace API.Controllers
             {
                 return NotFound();
             }
-            await _companyService.DeleteCompany(companyDto); 
+            await _companyService.DeleteCompany(id);
             return NoContent();
         }
 
         [HttpPut("{id}")]
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCompany(int id, CompanyDto companyDto)
         {
             if (id != companyDto.Id)

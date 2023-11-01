@@ -5,34 +5,40 @@ using System.Threading.Tasks;
 using API.Data;
 using API.Dtos;
 using API.Entities;
+using API.Repositories;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
 {
-    public class EmployeeService : IEmployeeService<EmployeeDto>
+    public class EmployeeService : IEmployeeService
     {
-        private readonly StoreContext _context;
+        private readonly IEmployeeeRepository _employeeRepository;
         private readonly IMapper _mapper;
-        public EmployeeService(StoreContext context, IMapper mapper)
+        public EmployeeService(IEmployeeeRepository employeeRepository, IMapper mapper)
         {
-            _context = context;
+            _employeeRepository = employeeRepository;
             _mapper = mapper;
         }
 
         public async Task<EmployeeDto> GetEmployee(int id)
         {
-            var employee = await _context.Employees
-               .Include(e=> e.Company)
-               .FirstOrDefaultAsync(nameof => nameof.Id == id);
+            var employee = await _employeeRepository.GetAll()
+                .Include(e => e.Company)
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (employee == null)
+            {
+                return null;
+            }
+
             var employeeDto = _mapper.Map<EmployeeDto>(employee);
             return employeeDto;
-
         }
+
         public IQueryable<EmployeeDto> GetEmployees()
         {
-            var employees = _context.Employees
-                .Include(e => e.Company);
+            var employees = _employeeRepository.GetAll().Include(e => e.Company);
             var employeeDtos = _mapper.ProjectTo<EmployeeDto>(employees);
 
             return employeeDtos;
@@ -56,28 +62,21 @@ namespace API.Services
 
         //     return employeeDtos;
         // }
-        public async Task CreateEmployee(EmployeeDto employeeDto)
+        public async Task CreateEmployeeAsync(EmployeeDto employeeDto)
         {
             var employee = _mapper.Map<Employee>(employeeDto);
-            _context.Employees.Add(employee);
-            await _context.SaveChangesAsync();
-        }
-        public async Task DeleteEmployee(EmployeeDto employeeDto)
-        {
-            var employee = _mapper.Map<Employee>(employeeDto);
-            var existingEmployee = await _context.Employees.FindAsync(employee.Id);
-            if (existingEmployee != null)
-            {
-                _context.Employees.Remove(existingEmployee);
-                await _context.SaveChangesAsync();
-            }
-        }
-        public async Task UpdateEmployee(EmployeeDto employeeDto)
-        {
-            var employee = _mapper.Map<Employee>(employeeDto);
-            _context.Employees.Update(employee);
-            await _context.SaveChangesAsync();
+            await _employeeRepository.CreateAsync(employee);
         }
 
+        public async Task UpdateEmployeeAsync(EmployeeDto employeeDto)
+        {
+            var employee = _mapper.Map<Employee>(employeeDto);
+            await _employeeRepository.UpdateAsync(employee);
+        }
+
+        public async Task DeleteEmployeeAsync(int id)
+        {
+            await _employeeRepository.DeleteAsync(id);
+        }
     }
 }
