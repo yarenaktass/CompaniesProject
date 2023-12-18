@@ -7,6 +7,7 @@ import { fetchCompaniesAsync } from './slices/companiesSlice';
 import { Provider } from 'react-redux';
 import { store } from './app/store/ConfigureStore';
 import { BrowserRouter } from 'react-router-dom';
+import { fetchUserRoleAsync } from './slices/accountSlice';
 // import AppRoutes from './routes/Routes';
 
 const root = ReactDOM.createRoot(

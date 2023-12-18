@@ -80,7 +80,7 @@ const WorkTable = () => {
     return (
       <>
         <div>
-        <AppBar position="static" sx={{ backgroundColor: 'purple', mb:4}}>
+        <AppBar position="static" sx={{ backgroundColor: '#aea1ff', mb:4}}>
             <Toolbar>
                 <BackButton/>
                 <Box sx = {{flex:1, display:'flex', justifyContent: 'center'}}>
@@ -93,7 +93,7 @@ const WorkTable = () => {
               <Button
                 sx={{
                   color: "white",
-                  backgroundColor: "purple",
+                  backgroundColor: "#aea1ff",
                   display: "flex",
                 }}
               >
@@ -114,7 +114,7 @@ const WorkTable = () => {
       <div style={{display:"flex", alignItems:'center'}}>
       <Button
           variant="contained"
-          sx={{ color: "white", backgroundColor: "purple", display: "flex" }}
+          sx={{ color: "white", backgroundColor: "#aea1ff", display: "flex" }}
           onClick={() =>
             handleCreateorUpdateWork(null, EnumFormStateType.CreateForm)
           }
@@ -122,7 +122,7 @@ const WorkTable = () => {
           Add Work
         </Button>
         <Button onClick={handleDownloadExcel}>
-          <ArrowCircleDownIcon sx={{ color: "purple", fontSize: "36px" }} />
+          <ArrowCircleDownIcon sx={{ color: "#aea1ff", fontSize: "36px" }} />
         </Button>
          <div style={{marginLeft:"10px"}}>
          <TextField
@@ -133,14 +133,14 @@ const WorkTable = () => {
             sx={{
               "& .MuiOutlinedInput-root": {
                 "& fieldset" : {
-                  borderColor: "purple",
+                  borderColor: "#aea1ff",
                   borderWidth:2,
                 },
                 "&:hover fieldset" : {
-                  borderColor:"purple", // Mouse ile üstüne gelindiğinde çizgi rengi
+                  borderColor:"#aea1ff", // Mouse ile üstüne gelindiğinde çizgi rengi
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "purple",   // Odaklandığında çizgi rengi
+                  borderColor: "#aea1ff",   // Odaklandığında çizgi rengi
                 },
               },
             }}
@@ -153,22 +153,22 @@ const WorkTable = () => {
         <Table >
           <TableHead>
             <TableRow>
-              <TableCell style={{ fontWeight: "bold", color: "purple" , width:"50px" }}>
+              <TableCell style={{ fontWeight: "bold", color: "#aea1ff" , width:"200px" }}>
                 TİTLE
               </TableCell>
-              <TableCell style={{ fontWeight: "bold", color: "purple" , width:"400px" }}>
+              <TableCell style={{ fontWeight: "bold", color: "#aea1ff" , width:"550px" }}>
                 DESCRİPTİON
               </TableCell>
-              <TableCell style={{ fontWeight: "bold", color: "purple", width:"200px" }}>
+              <TableCell style={{ fontWeight: "bold", color: "#aea1ff", width:"100px" }}>
                 ASSİGNED EMPLOYEE
               </TableCell>
-              <TableCell style={{ fontWeight: "bold", color: "purple", width:"150px" }}>
+              <TableCell style={{ fontWeight: "bold", color: "#aea1ff", width:"100px" }}>
                 COMPANY NAME
               </TableCell>
-              <TableCell style={{ fontWeight: "bold", color: "purple", width:"30px" }}>
+              <TableCell style={{ fontWeight: "bold", color: "#aea1ff", width:"30px" }}>
                 PRİORİTY
               </TableCell>
-              <TableCell style={{ fontWeight: "bold", color: "purple", width:"80px" }}>
+              <TableCell style={{ fontWeight: "bold", color: "#aea1ff", width:"80px" }}>
                 DUE DATE
               </TableCell>
            

@@ -27,8 +27,7 @@ import EnumFormStateType from "../../models/EnumFormState";
 import EditIcon from "@mui/icons-material/Edit";
 import * as XLSX from "xlsx";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
-import { formatDate } from "../../models/util";
-import { title } from "process";
+import { formatDate, isAdmin } from "../../models/util";
 import BackButton from "../../../constants/BackButton";
 import Menu from "../../../layout/Menu";
 import { Link } from "react-router-dom";
@@ -64,10 +63,10 @@ const CompanyTable = () => {
     return <Loading message="Loading products..." />;
   }
 
-  const handleCreateorUpdateCompany = (props: any, formStateType: number) => {
+  const handleCreateorUpdateCompany = (id: any, formStateType: number) => {
     setFormState(formStateType);
     setIsOpenCreateorUpdatePopup(true);
-    setCompanyId(props);
+    setCompanyId(id);
   };
 
   const handleClose = () => {
@@ -77,10 +76,10 @@ const CompanyTable = () => {
 
   const handleDownloadExcel = () => {
     const data = companies.map((company) => ({
-      ID: company.id.toString(),
-      NAME: company.name,
-      TİTLE: company.title,
-      ACTİVE: company.isActive.toString(),
+      "ID": company.id.toString(),
+      "NAME": company.name,
+      "TİTLE": company.title,
+      "ACTİVE": company.isActive.toString(),
       "TAX NUMBER": company.taxNumber,
       "CREATE DATE": company.createDate.toLocaleString(),
       "UPDATE DATE": company.updateDate.toLocaleString(),
@@ -179,10 +178,10 @@ const CompanyTable = () => {
                   borderWidth: 2,
                 },
                 "&:hover fieldset": {
-                  borderColor: "darkgreen", // Mouse ile üstüne gelindiğinde çizgi rengi
+                  borderColor: "darkgreen",
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "darkgreen", // Odaklandığında çizgi rengi
+                  borderColor: "darkgreen",
                 },
               },
             }}
@@ -195,14 +194,13 @@ const CompanyTable = () => {
       <Table>
         <TableHead>
           <TableRow>
-            {/* <TableCell style={{ fontWeight: 'bold', color: 'green' }}>ID</TableCell> */}
             <TableCell
               style={{ fontWeight: "bold", color: "green", width: "50px" }}
             >
               NAME
             </TableCell>
             <TableCell
-              style={{ fontWeight: "bold", color: "green", width: "150px" }}
+              style={{ fontWeight: "bold", color: "green", width: "250px" }}
             >
               TİTLE
             </TableCell>
@@ -236,7 +234,6 @@ const CompanyTable = () => {
         <TableBody>
           {filteredCompanies.map((company) => (
             <TableRow key={company.id}>
-              {/* <TableCell>{company.id.toString()}</TableCell> */}
               <TableCell>{company.name}</TableCell>
               <TableCell>{company.title}</TableCell>
               <TableCell>{company.address}</TableCell>
@@ -262,7 +259,7 @@ const CompanyTable = () => {
                 >
                   <EditIcon sx={{ color: "darkGreen" }} />
                 </Button>
-                {user && user.roles?.includes("Admin") ? (
+                {isAdmin(user) ? (
                   <Button
                     onClick={() =>
                       dispatch(

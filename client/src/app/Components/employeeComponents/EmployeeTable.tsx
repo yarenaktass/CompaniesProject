@@ -65,6 +65,7 @@ const EmployeeTable = () => {
     setFormState(formStateType);
     setIsEmployeeCreateorUpdatePopup(true);
     setEmployeeeId(props);
+    debugger;
   };
 
   const handlePopupClose = () => {
@@ -190,22 +191,22 @@ const EmployeeTable = () => {
         <TableHead>
           <TableRow>
             <TableCell
-              style={{ fontWeight: "bold", color: "blue", width: "80px" }}
+              style={{ fontWeight: "bold", color: "blue", width: "100px" }}
             >
               NAME
             </TableCell>
             <TableCell
-              style={{ fontWeight: "bold", color: "blue", width: "80px" }}
+              style={{ fontWeight: "bold", color: "blue", width: "100px" }}
             >
               SURNAME
             </TableCell>
             <TableCell
-              style={{ fontWeight: "bold", color: "blue", width: "200px" }}
+              style={{ fontWeight: "bold", color: "blue", width: "400px" }}
             >
               TİTLE
             </TableCell>
             <TableCell
-              style={{ fontWeight: "bold", color: "blue", width: "200px" }}
+              style={{ fontWeight: "bold", color: "blue", width: "300px" }}
             >
               COMPANY NAME
             </TableCell>

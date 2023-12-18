@@ -76,10 +76,10 @@ export default function CreateorUpdateCompany({
  
 
   useEffect(() => {
-    getCompanyById();
+    getCompanyById(id);
   }, [formState,id]);
 
-  const getCompanyById = () => {
+  const getCompanyById = (id:any) => {
     if (formState === EnumFormStateType.UpdateForm) {
       agent.Companies.itemById(id)
         .then((response) => {

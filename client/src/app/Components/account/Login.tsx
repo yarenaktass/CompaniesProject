@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AppBar, Paper, Toolbar } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import BackButton from '../../../constants/BackButton';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../../store/ConfigureStore';
@@ -22,20 +22,21 @@ export default function Login() {
   const navigate = useNavigate();
   const {user} = useAppSelector((state) => state.account)
   const dispatch = useAppDispatch();
+  const location = useLocation();
     const {register, handleSubmit, formState:{errors,isValid}} = useForm({
       mode:'onTouched'
     })
 
      async function submitForm(data: FieldValues){
-      debugger;
-       await dispatch(signInUser(data));
-       console.log(user);
-       {user ?  
-         (navigate('/'))
-         :(
-          toast.error("Unauthorize")
-       )}
-      debugger;
+      try{
+        await dispatch(signInUser(data));
+        console.log(user);
+        navigate(location.state?.from || '/');     
+      }catch(error){
+        toast.error("User not found !")
+        console.log(error);
+      }
+     
     }
 
   return (

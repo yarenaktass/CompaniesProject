@@ -111,7 +111,7 @@ export default function CreateorUpdateWork({
             fontStyle: "italic",
             display: "flex",
             justifyContent: "center",
-            backgroundColor: "purple",
+            backgroundColor: "#dce775",
             color: "white",
           }}
         >
@@ -222,7 +222,7 @@ export default function CreateorUpdateWork({
                   variant="contained"
                   sx={{
                     color: "white",
-                    backgroundColor: "purple",
+                    backgroundColor: "#aea1ff",
                     display: "flex",
                   }}
                 >
@@ -231,7 +231,7 @@ export default function CreateorUpdateWork({
                 <Button
                   sx={{
                     color: "white",
-                    backgroundColor: "purple",
+                    backgroundColor: "#aea1ff",
                     display: "flex",
                   }}
                   onClick={(event) => handlePopupClose(event)}

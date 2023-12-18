@@ -16,6 +16,8 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useAppDispatch, useAppSelector } from "../app/store/ConfigureStore";
 import { signOut } from "../slices/accountSlice";
+import { isAdmin } from "../app/models/util";
+import PeopleIcon from "@mui/icons-material/People";
 
 const menuLinkStyles = {
   display: "flex",
@@ -138,6 +140,14 @@ export default function Menu() {
                         Work List
                       </Link>
                     </MenuItem>
+                    {isAdmin(user) && (
+                      <MenuItem onClick={handleClose}>
+                        <Link to="/userRolePage" style={menuLinkStyles}>
+                          <AssignmentIcon sx={iconsStyle} />
+                          Users' Roles List
+                        </Link>
+                      </MenuItem>
+                    )}
                     <MenuItem
                       onClick={() => {
                         dispatch(signOut());

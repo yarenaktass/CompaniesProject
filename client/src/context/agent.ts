@@ -4,6 +4,7 @@ import { Employee } from "../app/models/employee";
 import { Work } from "../app/models/Work";
 import { store } from "../app/store/ConfigureStore";
 import { toast } from "react-toastify";
+import { UserRole } from "../app/models/userRole";
 
 axios.defaults.baseURL = 'http://localhost:5000/api/';
 axios.defaults.withCredentials=true;
@@ -77,11 +78,15 @@ const Works={
    
 };
 
-
+debugger;
 const Account = {
+    list:() => requests.get('account/userRoles'),
+    itemById: (id: any) => requests.get(`account/${id}`),
     login: (values: any) => requests.post('account/login', values),
     register: (values: any) => requests.post('account/register', values),
-    currentUser: () => requests.get('account/currentUser')
+    currentUser: () => requests.get('account/currentUser'),
+    changeRoles: (userRoles:UserRole) => requests.post('account/changeRoles', userRoles), 
+    
  }
  
 debugger;

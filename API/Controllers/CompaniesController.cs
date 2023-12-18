@@ -7,6 +7,8 @@ using API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
 
 namespace API.Controllers
 {
@@ -15,10 +17,12 @@ namespace API.Controllers
     public class CompaniesController : ControllerBase
     {
         private readonly ICompanyService _companyService;
+        private readonly ILogger<CompaniesController> _logger;
 
-        public CompaniesController(ICompanyService companyService)
+        public CompaniesController(ICompanyService companyService, ILogger<CompaniesController> logger)
         {
             _companyService = companyService;
+             _logger = logger;
         }
 
         [HttpGet]
@@ -78,7 +82,7 @@ namespace API.Controllers
             {
                 await _companyService.UpdateCompany(companyDto);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 if (!await CompanyExist(id))
                 {
@@ -86,7 +90,10 @@ namespace API.Controllers
                 }
                 else
                 {
-                    throw;
+                    // throw; 
+                   // return BadRequest("Concurrency issue during company update.");
+                   _logger.LogError(ex, "Concurrency exception during company update.");
+
                 }
             }
             return NoContent();
