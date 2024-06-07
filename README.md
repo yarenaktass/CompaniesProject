@@ -6,11 +6,15 @@ Backend: .NET Core Web API, Frontend: React.js, Database: SQLite.
 
 # In the project directory, you can run:
 
+# `cd CompaniesProject-main`
+
 ### for React (visual studio code)
 # `cd client`
 # `npm start `
 
-### for .Net  (visual studio)
+### for .Net 
+# `cd API`
+# `dotnet run`
 
 #Screenshots of the Project
 
